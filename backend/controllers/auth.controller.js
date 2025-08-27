@@ -152,4 +152,73 @@ const logoutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "User logged Out successfully"));
 });
 
-export { signupUser, loginUser, logoutUser };
+//refresh Access Token
+const refreshAccessToken = asyncHandler(async (req, res) => {
+    const incomingRefreshToken =
+        req.cookies.refreshToken || req.body.refreshToken;
+
+    if (!incomingRefreshToken) {
+        throw new ApiError(404, "No Token Found");
+    }
+
+    try {
+        const decodedToken = jwt.verify(
+            incomingRefreshToken,
+            process.env.REFRESH_TOKEN_SECRET
+        );
+        const storedToken = await redis.get(
+            `refresh_token:${decodedToken.userId}`
+        );
+
+        if (storedToken !== incomingRefreshToken) {
+            throw new ApiError(403, "Invalid Request");
+        } else {
+            const newAccessToken = jwt.sign(
+                { userId: decodedToken.userId },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: "15m" }
+            );
+
+            return res
+                .status(200)
+                .cookie("accessToken", newAccessToken, accessOptions)
+                .json(
+                    new ApiResponse(
+                        200,
+                        {},
+                        "Access Token Refreshed Successfully"
+                    )
+                );
+        }
+    } catch (error) {
+        throw new ApiError(
+            500,
+            error.message ||
+                "Something went wrong while refreshing access Token"
+        );
+    }
+});
+
+// Check later
+const getUserProfile = asyncHandler(async (req, res) => {
+    const userId = req.user;
+    const userDetail = await User.findById(userId).select("-password");
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                userDetail,
+                "User Profile fetched successfully"
+            )
+        );
+});
+
+export {
+    signupUser,
+    loginUser,
+    logoutUser,
+    refreshAccessToken,
+    getUserProfile,
+};
