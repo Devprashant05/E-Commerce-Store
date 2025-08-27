@@ -137,7 +137,7 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-    const userId = req.user;
+    const userId = req.user._id;
 
     if (!isValidObjectId(userId)) {
         throw new ApiError(404, "Invalid UserId or User not found");
@@ -201,7 +201,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 // Check later
 const getUserProfile = asyncHandler(async (req, res) => {
-    const userId = req.user;
+    const userId = req.user._id;
     const userDetail = await User.findById(userId).select("-password");
 
     return res

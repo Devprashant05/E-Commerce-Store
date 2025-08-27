@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.route.js";
 import healthRoute from "./routes/healthcheck.route.js";
+import productRoute from './routes/product.route.js'
 
 const app = express();
 
@@ -23,5 +24,6 @@ app.use(cookieParser());
 
 app.use("/api/health", healthRoute);
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoute);
 
 export default app;
