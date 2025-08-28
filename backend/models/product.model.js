@@ -22,10 +22,10 @@ const productSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        quantityInStock: {
-            type: Number,
-            required: true,
-        },
+        // quantityInStock: {
+        //     type: Number,
+        //     required: true,
+        // },
         isFeatured: {
             type: Boolean,
             default: false,

@@ -72,12 +72,11 @@ const getFeaturedProduct = asyncHandler(async (req, res) => {
 });
 
 const createProduct = asyncHandler(async (req, res) => {
-    const { name, description, price, category, quantityInStock, isFeatured } =
-        req.body;
+    const { name, description, price, category, isFeatured } = req.body;
     const imageLocalPath = req.file?.path;
 
     if (
-        [name, description, price, category, quantityInStock].some(
+        [name, description, price, category].some(
             (field) => field.trim() === ""
         )
     ) {
@@ -100,7 +99,6 @@ const createProduct = asyncHandler(async (req, res) => {
         price,
         image: cloudinaryResponse.url,
         category,
-        quantityInStock,
     });
 
     if (!product) {
