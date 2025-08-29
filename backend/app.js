@@ -5,6 +5,7 @@ import authRoutes from "./routes/auth.route.js";
 import healthRoute from "./routes/healthcheck.route.js";
 import productRoute from "./routes/product.route.js";
 import cartRoutes from './routes/cart.route.js'
+import couponRoutes from './routes/coupon.route.js'
 
 const app = express();
 
@@ -27,5 +28,6 @@ app.use("/api/health", healthRoute);
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoute);
 app.use("/api/cart", cartRoutes);
+app.use("/api/cupons", couponRoutes)
 
 export default app;
