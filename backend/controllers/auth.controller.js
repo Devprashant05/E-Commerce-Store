@@ -201,18 +201,18 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 // Check later
 const getUserProfile = asyncHandler(async (req, res) => {
-    const userId = req.user._id;
-    const userDetail = await User.findById(userId).select("-password");
+    const user = req.user;
+
+    if (!user) {
+        throw new ApiError(
+            500,
+            "Something went wrong while geting user profile"
+        );
+    }
 
     return res
         .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                userDetail,
-                "User Profile fetched successfully"
-            )
-        );
+        .json(new ApiResponse(200, user, "User Profile fetched successfully"));
 });
 
 export {
