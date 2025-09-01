@@ -61,37 +61,43 @@ const signupUser = asyncHandler(async (req, res) => {
         );
     }
 
-    const createdUser = await User.create({
-        username,
-        email,
-        password,
-    });
+    try {
+        const createdUser = await User.create({
+            username,
+            email,
+            password,
+        });
 
-    if (!createdUser) {
-        throw new ApiError(500, "Something went wrong while creating user");
-    }
+        if (!createdUser) {
+            throw new ApiError(500, "Something went wrong while creating user");
+        }
 
-    const { accessToken, refreshToken } = generateToken(createdUser._id);
-    await storeRefreshToken(refreshToken, createdUser._id);
+        const { accessToken, refreshToken } = generateToken(createdUser._id);
+        await storeRefreshToken(refreshToken, createdUser._id);
 
-    return res
-        .status(200)
-        .cookie("accessToken", accessToken, accessOptions)
-        .cookie("refreshToken", refreshToken, refreshOptions)
-        .json(
-            new ApiResponse(
-                200,
-                {
-                    user: {
-                        _id: createdUser._id,
-                        username: createdUser.username,
-                        email: createdUser.email,
-                        role: createdUser.role,
+        return res
+            .status(200)
+            .cookie("accessToken", accessToken, accessOptions)
+            .cookie("refreshToken", refreshToken, refreshOptions)
+            .json(
+                new ApiResponse(
+                    200,
+                    {
+                        user: {
+                            _id: createdUser._id,
+                            username: createdUser.username,
+                            email: createdUser.email,
+                            role: createdUser.role,
+                        },
                     },
-                },
-                "User Created Successfully"
-            )
-        );
+                    "User Created Successfully"
+                )
+            );
+    } catch (error) {
+        // res.status(500).json({ message: error.message }); // this gives me proper message
+        res.status(500).json(new ApiError(500, error.message)); // this doesn't show any message
+        // throw new ApiError(500, error.message);
+    }
 });
 
 const loginUser = asyncHandler(async (req, res) => {
