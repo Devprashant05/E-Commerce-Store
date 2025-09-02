@@ -6,6 +6,8 @@ import jwt from "jsonwebtoken";
 import { redis } from "../utils/redis.js";
 import { isValidObjectId } from "mongoose";
 
+// FIXME: Error handling with the new res way.
+
 const generateToken = (userId) => {
     const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "15m",

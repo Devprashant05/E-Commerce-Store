@@ -63,9 +63,10 @@ const useUserStore = create((set, get) => ({
             set({ user: result.data.data, checkingAuth: false });
         } catch (error) {
             set({ checkingAuth: false, user: null });
-            // toast.error(error?.response?.data.message || "An error occured");
         }
     },
+
+    // TODO: Implement the axios interceptors for refreshing accesst token
 }));
 
 export { useUserStore };

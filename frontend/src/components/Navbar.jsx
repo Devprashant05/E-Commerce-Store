@@ -5,7 +5,6 @@ import { useUserStore } from "../stores/useUserStore";
 
 const Navbar = () => {
     const { user, logout } = useUserStore();
-    // const user = false;
     const isAdmin = user?.role === "admin";
     return (
         <header className="fixed top-0 left-0 w-full bg-gray-900 bg-opacity-90 backdrop-blur-md shadow-lg z-40 transition-all duration-300 border-b border-purple-800">
@@ -39,7 +38,10 @@ const Navbar = () => {
                         </Link>
                     )}
                     {isAdmin && (
-                        <Link className="bg-purple-700 hover:bg-purple-600 text-white px-3 py-1 rounded-md font-medium transition duration-300 ease-in-out flex items-center">
+                        <Link
+                            to={"/dashboard"}
+                            className="bg-purple-700 hover:bg-purple-600 text-white px-3 py-1 rounded-md font-medium transition duration-300 ease-in-out flex items-center"
+                        >
                             <Lock className="inline-block mr-2" size={18} />
                             <span className="hidden sm:inline">Dashboard</span>
                         </Link>
