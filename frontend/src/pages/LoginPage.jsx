@@ -13,7 +13,6 @@ const LoginPage = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         login(email, password);
-        console.log(email, password);
     };
     return (
         <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { PlusCircle, Upload, Loader } from "lucide-react";
+import { PlusCircle, Upload, Loader, Check } from "lucide-react";
+import { useProductStore } from "../stores/useProductStore";
 
 const categories = [
     "jean",
@@ -13,19 +14,57 @@ const categories = [
 ];
 
 const CreateProduct = () => {
-    const loading = false;
+    const { createProduct, loading } = useProductStore();
+    // const loading = false;
     const [newProduct, setNewProduct] = useState({
         name: "",
         description: "",
         price: "",
         category: "",
-        image: "",
+        productImage: "",
     });
 
-    const submitHandler = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
+        try {
+            /**
+             * So whenever file uploads through multer or in general converts into form data
+             * file render increase the size by 33% and server needs to decode base64 and that not efficient for large files
+             */
+
+            // formdata Object
+            const formData = new FormData();
+            formData.append("name", newProduct.name);
+            formData.append("description", newProduct.description);
+            formData.append("price", newProduct.price);
+            formData.append("category", newProduct.category);
+            formData.append("productImage", newProduct.productImage);
+
+            await createProduct(formData);
+            setNewProduct({
+                name: "",
+                description: "",
+                price: "",
+                category: "",
+                image: "",
+            });
+        } catch (error) {
+            console.log("error creating a product", error);
+        }
         console.log(newProduct);
     };
+
+    // 2nd way to handle files
+    // const handleImageChange = (e) => {
+    //     const file = e.target.files[0];
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onloadend = () => {
+    //             setNewProduct({ ...newProduct, image: reader.result });
+    //         };
+    //         reader.readAsDataURL(file); //this conver the file into base64 format
+    //     }
+    // };
 
     return (
         <motion.div
@@ -145,6 +184,17 @@ const CreateProduct = () => {
                         id="image"
                         className="sr-only"
                         accept="image/*"
+                        onChange={(e) => {
+                            const productImage = e.target.files[0];
+                            console.log(productImage);
+
+                            if (productImage) {
+                                setNewProduct({
+                                    ...newProduct,
+                                    productImage: productImage,
+                                });
+                            }
+                        }}
                     />
                     <label
                         htmlFor="image"
@@ -153,9 +203,10 @@ const CreateProduct = () => {
                         <Upload className="h-5 w-5 inline-block mr-2" />
                         Upload Image
                     </label>
-                    {newProduct.image && (
-                        <span className="ml-3 text-sm text-gray-400">
-                            {newProduct.image}
+                    {newProduct.productImage && (
+                        <span className="ml-3 text-sm text-gray-400 flex items-center">
+                            Image Uploaded{" "}
+                            <Check className="ml-2 h-4 w-4 text-green-500" />
                         </span>
                     )}
                 </div>

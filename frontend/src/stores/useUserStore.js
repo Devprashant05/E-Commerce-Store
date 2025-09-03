@@ -28,7 +28,7 @@ const useUserStore = create((set, get) => ({
             });
             set({ user: result.data.data.user, loading: false });
             console.log(result.data);
-            toast.success(result.data.message + " Please login now.");
+            toast.success(result.data.message);
         } catch (error) {
             set({ loading: false });
             toast.error(error?.response?.data.message || "An error occured");

@@ -14,7 +14,7 @@ const updateFeaturedProductCache = async () => {
         const featuredProducts = await Product.find({
             isFeatured: true,
         }).lean();
-        await redis.set("featured_products", JSON.parse(featuredProducts));
+        await redis.set("featured_products", JSON.stringify(featuredProducts));
     } catch (error) {
         throw new ApiError(500, "Error while updating the cache");
     }
@@ -121,6 +121,16 @@ const deleteProduct = asyncHandler(async (req, res) => {
     const imagePublicId = product.image.split("/").pop().split(".")[0];
     await deleteFromCloudinary(`Products/${imagePublicId}`, "image");
 
+    //deleting from redis cache
+    const featured = await redis.get("featured_products");
+    if (featured) {
+        const featuredProducts = JSON.parse(featured);
+        const updatedProducts = featuredProducts.filter(
+            (product) => product._id !== productId
+        );
+        await redis.set("featured_products", JSON.stringify(updatedProducts));
+    }
+
     const deletedProduct = await Product.findByIdAndDelete(productId);
 
     if (!deletedProduct) {
@@ -207,7 +217,7 @@ const toggleFeaturedProduct = asyncHandler(async (req, res) => {
                 new ApiResponse(
                     200,
                     updatedProduct,
-                    "Product isFeatured Updated successfully"
+                    "Product Updated successfully"
                 )
             );
     } else {
