@@ -11,7 +11,7 @@ const ProductsList = () => {
 
     return (
         <motion.div
-            className="bg-gray-800 shadow-lg rounded-lg overflow-hidden max-w-7xl mx-auto"
+            className="bg-gray-800 shadow-lg rounded-lg overflow-x-scroll max-w-7xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -77,8 +77,9 @@ const ProductsList = () => {
                                 </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                                <p className="text-sm text-gray-300">
-                                    {product.description}
+                                <p className="text-sm text-gray-300 ">
+                                    {product.description.substring(0, 60) +
+                                        "..."}
                                 </p>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">

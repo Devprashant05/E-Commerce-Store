@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { categories } from "../constants";
 import CategoryItem from "../components/CategoryItem";
+import { useProductStore } from "../stores/useProductStore";
 
 const HomePage = () => {
     return (

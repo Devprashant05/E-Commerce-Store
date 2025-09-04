@@ -2,7 +2,7 @@ import { BarChart2, PlusCircle, ShoppingBasket } from "lucide-react";
 
 export const categories = [
     { href: "/jeans", name: "Jeans", imageUrl: "/jeans.jpg" },
-    { href: "/tshirts", name: "T-shirts", imageUrl: "/tshirt.jpg" },
+    { href: "/t-shirts", name: "T-shirts", imageUrl: "/tshirt.jpg" },
     { href: "/shoes", name: "Shoes", imageUrl: "/shoes.jpg" },
     { href: "/glasses", name: "Glasses", imageUrl: "/glasses.jpg" },
     { href: "/jackets", name: "Jackets", imageUrl: "/jackets.jpg" },

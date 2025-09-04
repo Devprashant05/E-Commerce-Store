@@ -6,32 +6,36 @@ import Product from "../models/product.model.js";
 const addToCart = asyncHandler(async (req, res) => {
     const { productId } = req.body;
     const user = req.user;
-
+    // console.log(user);
     try {
-        const existingItem = user.cartItems.find(
+        const existingItem = user.cartItem.find(
             (item) => item.id === productId
         );
 
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
-            user.cartItems.push(productId);
+            user.cartItem.push(productId);
         }
 
-        const updatedCart = await user.save();
-        console.log(updatedCart);
+        await user.save();
+        // console.log(updatedCart);
 
         return res
             .status(200)
             .json(
                 new ApiResponse(
                     200,
-                    user.cartItems,
+                    user.cartItem,
                     "Item added to cart successfully"
                 )
             );
     } catch (error) {
-        throw new ApiError(500, "Something went wrong while add item to cart");
+        throw new ApiError(
+            500,
+            error.message,
+            user || "Something went wrong while add item to cart"
+        );
     }
 });
 
