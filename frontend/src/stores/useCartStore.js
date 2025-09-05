@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import axios from "../lib/axios";
 import { toast } from "react-hot-toast";
+import { data } from "react-router-dom";
 
 export const useCartStore = create((set, get) => ({
     cart: [],
@@ -8,11 +9,11 @@ export const useCartStore = create((set, get) => ({
     total: 0,
     subTotal: 0,
     loading: false,
+    isCouponApplied: false,
 
     getCartItems: async () => {
         try {
             const result = await axios.get("/cart");
-            console.log(result.data.data);
             set({ cart: result.data.data });
             get().calculateTotal();
         } catch (error) {
@@ -48,17 +49,42 @@ export const useCartStore = create((set, get) => ({
         }
     },
 
+    removeFromCart: async (productId) => {
+        console.log(productId);
+        const response = await axios.delete("/cart", { data: { productId } });
+        set((prevState) => ({
+            cart: prevState.cart.filter((item) => item._id !== productId),
+        }));
+        get().calculateTotal();
+        toast.success(response.data.message);
+    },
+
+    updateQuantity: async (productId, quantity) => {
+        if (quantity === 0) {
+            get().removeFromCart(productId);
+            return;
+        }
+        await axios.put(`/cart/${productId}`, { quantity });
+        set((prevState) => ({
+            cart: prevState.cart.map((item) =>
+                item._id === productId ? { ...item, quantity } : item
+            ),
+        }));
+        get().calculateTotal();
+    },
+
     calculateTotal: () => {
         const { cart, coupon } = get();
-        const subtotal = cart.reduce(
+        const subTotal = cart.reduce(
             (sum, item) => sum + item.price * item.quantity,
             0
         );
-        let total = subtotal;
+
+        let total = subTotal;
         if (coupon) {
-            const discount = subtotal * (coupon.discountPercentage / 100);
-            total = subtotal - discount;
+            const discount = subTotal * (coupon.discountPercentage / 100);
+            total = subTotal - discount;
         }
-        set({ subtotal, total });
+        set({ subTotal, total });
     },
 }));

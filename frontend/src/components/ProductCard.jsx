@@ -6,7 +6,7 @@ import { useCartStore } from "../stores/useCartStore";
 
 const ProductCard = ({ product }) => {
     const { user } = useUserStore();
-    const { cart, getCartItems, addToCart } = useCartStore();
+    const { cart, addToCart } = useCartStore();
     const handleAddToCart = () => {
         if (!user) {
             toast.error("Please login to add products to cart", {

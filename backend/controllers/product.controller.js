@@ -147,7 +147,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 const getRecommendedProduct = asyncHandler(async (req, res) => {
     const products = await Product.aggregate([
         {
-            $sample: { size: 3 },
+            $sample: { size: 4 },
         },
         {
             $project: {

@@ -42,12 +42,12 @@ const addToCart = asyncHandler(async (req, res) => {
 const getCartProducts = asyncHandler(async (req, res) => {
     try {
         const products = await Product.find({
-            _id: { $in: req.user?.cartItems },
+            _id: { $in: req.user?.cartItem },
         });
 
         // add quantity for each product
         const cartItems = products.map((product) => {
-            const item = req.user.cartItems.find(
+            const item = req.user.cartItem.find(
                 (cartItem) => cartItem.id === product.id
             );
             return { ...product.toJSON(), quantity: item.quantity };
@@ -73,12 +73,13 @@ const getCartProducts = asyncHandler(async (req, res) => {
 const removeAllFromCart = asyncHandler(async (req, res) => {
     const { productId } = req.body;
     const user = req.user;
+    console.log(productId);
 
     try {
         if (!productId) {
-            user.cartItems = [];
+            user.cartItem = [];
         } else {
-            user.cartItems = user.cartItems.filter(
+            user.cartItem = user.cartItem.filter(
                 (item) => item.id !== productId
             );
         }
@@ -91,7 +92,7 @@ const removeAllFromCart = asyncHandler(async (req, res) => {
             .json(
                 new ApiResponse(
                     200,
-                    user.cartItems,
+                    user.cartItem,
                     "Item removed from cart successfully"
                 )
             );
@@ -109,12 +110,12 @@ const updateQuantity = asyncHandler(async (req, res) => {
     const { quantity } = req.body;
     const user = req.user;
 
-    const existingItem = user.cartItems.find((item) => item.id === productId);
+    const existingItem = user.cartItem.find((item) => item.id === productId);
 
     try {
         if (existingItem) {
             if (quantity === 0) {
-                user.cartItems = user.cartItems.filter(
+                user.cartItem = user.cartItem.filter(
                     (item) => item.id !== productId
                 );
                 await user.save();
@@ -123,7 +124,7 @@ const updateQuantity = asyncHandler(async (req, res) => {
                     .json(
                         new ApiResponse(
                             200,
-                            user.cartItems,
+                            user.cartItem,
                             "Quantity updated successfully"
                         )
                     );
@@ -135,7 +136,7 @@ const updateQuantity = asyncHandler(async (req, res) => {
                 .json(
                     new ApiResponse(
                         200,
-                        user.cartItems,
+                        user.cartItem,
                         "Quantity updated successfully"
                     )
                 );
