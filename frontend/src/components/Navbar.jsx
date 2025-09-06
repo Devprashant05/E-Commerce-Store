@@ -24,6 +24,12 @@ const Navbar = () => {
                     >
                         Home
                     </Link>
+                    {/* <Link
+                        to={"/purchase-success"}
+                        className="text-gray-300 hover:text-purple-400 transition ˀˀduration-300 ease-in-out"
+                    >
+                        purchase success
+                    </Link> */}
                     {user && (
                         <Link
                             to={"/cart"}

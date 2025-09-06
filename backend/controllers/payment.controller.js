@@ -48,6 +48,7 @@ const createCheckoutSession = asyncHandler(async (req, res) => {
                     },
                     unit_amount: amount,
                 },
+                quantity: product.quantity || 1,
             };
         });
 
@@ -70,7 +71,7 @@ const createCheckoutSession = asyncHandler(async (req, res) => {
             line_items: lineItems,
             mode: "payment",
             success_url: `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${process.env.CLIENT_URL}/pruchase-cancel`,
+            cancel_url: `${process.env.CLIENT_URL}/purchase-cancel`,
             discounts: coupon
                 ? [
                       {

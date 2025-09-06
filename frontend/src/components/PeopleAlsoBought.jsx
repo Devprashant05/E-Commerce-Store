@@ -13,7 +13,6 @@ const PeopleAlsoBought = () => {
             try {
                 setIsLoading(true);
                 const response = await axios.get("/products/recommendations");
-                console.log(response);
 
                 setRecommendations(response.data.data);
             } catch (error) {
