@@ -7,7 +7,7 @@ import axios from "../lib/axios";
 const PurchaseSuccessPage = () => {
     const [isProcessing, setIsProcessing] = useState(true);
     const { clearCart } = useCartStore();
-    const [error, setError] = useState("");
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const handleCheckoutSuccess = async (sessionId) => {
