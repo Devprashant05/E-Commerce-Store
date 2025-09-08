@@ -5,7 +5,7 @@
 
 ## 🚀 Live Demo
 
-[Live Link]("https://e-commerce-store-v1wy.onrender.com")
+https://e-commerce-store-v1wy.onrender.com
 
 ## 🛠 Tech Stack
 
