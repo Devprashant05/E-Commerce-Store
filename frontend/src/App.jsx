@@ -42,7 +42,7 @@ const App = () => {
             <div className="relative z-50 pt-20">
                 <Navbar />
                 <Routes>
-                    <Route path="/" element={<HomePage user={user} />} />
+                    <Route path="/" element={<HomePage />} />
                     <Route
                         path="/signup"
                         element={!user ? <SignUpPage /> : <Navigate to={"/"} />}

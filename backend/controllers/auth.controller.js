@@ -10,7 +10,7 @@ import { isValidObjectId } from "mongoose";
 
 const generateToken = (userId) => {
     const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "30m",
+        expiresIn: "15m",
     });
 
     const refreshToken = jwt.sign(
@@ -37,7 +37,7 @@ const accessOptions = {
     httpOnly: true, //prevent XSS attacks, cross-site scripting attack
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict", // prevent CSRF attack, cross-site request forgery
-    maxAge: 30 * 60 * 1000, // 15m
+    maxAge: 15 * 60 * 1000, // 15m
 };
 
 const refreshOptions = {

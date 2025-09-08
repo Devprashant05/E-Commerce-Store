@@ -2,7 +2,7 @@ import { create } from "zustand";
 import axios from "../lib/axios";
 import { toast } from "react-hot-toast";
 
-const useUserStore = create((set, get) => ({
+export const useUserStore = create((set, get) => ({
     user: null,
     loading: false,
     checkingAuth: true,
@@ -66,7 +66,49 @@ const useUserStore = create((set, get) => ({
         }
     },
 
+    refeshToken: async () => {
+        // Prevent multiple simultaneous refesh attempts
+        if (get().checkingAuth) return;
+        set({ checkingAuth: true });
+        try {
+            const response = await axios.get("/auth/refresh-token");
+            set({ checkingAuth: false });
+            return response.data.data;
+        } catch (error) {
+            set({ user: null, checkingAuth: false });
+            throw error;
+        }
+    },
+
     // TODO: Implement the axios interceptors for refreshing accesst token
 }));
 
-export { useUserStore };
+//Axios interceptor for token refresh
+let refreshPromise = null;
+
+axios.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+        if ((error.response?.status === 401 && !originalRequest._retry)) {
+            originalRequest._retry = true;
+            try {
+                // if a refresh is already in progress, wait it for complete
+                if (refreshPromise) {
+                    await refreshPromise;
+                    return axios(originalRequest);
+                }
+                // start a new refresh process
+                refreshPromise = useUserStore.getState().refeshToken();
+                await refreshPromise;
+                refreshPromise = null;
+                return axios(originalRequest);
+            } catch (refreshError) {
+                // if refresh fails, redirect to login or handle as needed
+                useUserStore.getState().logout();
+                return Promise.reject(refreshError);
+            }
+        }
+        return Promise.reject(error);
+    }
+);

@@ -7,6 +7,6 @@ const router = Router();
 router.use(verifyJWT);
 
 router.route("/").get(getCoupon);
-router.route("/validate").get(validateCoupon);
+router.route("/validate").post(validateCoupon);
 
 export default router;
