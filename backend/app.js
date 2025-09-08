@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === "production") {
 
     // Different approaches for different Express versions
     // Try this first (works with both Express 4 and 5)
-    app.get("/:path(.*)", (req, res) => {
+    app.get("/{*any}", (req, res) => {
         // Only serve index.html for non-API routes
         if (req.path.startsWith("/api/")) {
             return res.status(404).json({ error: "API route not found" });
