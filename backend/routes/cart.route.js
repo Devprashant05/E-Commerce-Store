@@ -11,9 +11,11 @@ const router = Router();
 
 router.use(verifyJWT);
 
-router.route("/").post(addToCart);
-router.route("/").get(getCartProducts);
-router.route("/").delete(removeAllFromCart);
+router
+    .route("/")
+    .post(addToCart)
+    .get(getCartProducts)
+    .delete(removeAllFromCart);
 router.route("/:id").put(updateQuantity);
 
 export default router;
