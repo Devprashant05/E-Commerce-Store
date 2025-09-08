@@ -41,7 +41,13 @@ app.use("/api/analytics", analyticsRoutes);
 if (process.env.NODE_ENV === "production") {
     app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
-    app.get("/:path(*)", (req, res) => {
+    // Different approaches for different Express versions
+    // Try this first (works with both Express 4 and 5)
+    app.get("*", (req, res) => {
+        // Only serve index.html for non-API routes
+        if (req.path.startsWith("/api/")) {
+            return res.status(404).json({ error: "API route not found" });
+        }
         res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
     });
 }
